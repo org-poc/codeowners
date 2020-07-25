@@ -1,0 +1,25 @@
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-from-different-sources
+  namespace: authpns
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: [ "cluster.local/ns/echoserver/sa/svc-gke-mfa-wrkld" ]
+    - source:
+        namespaces: [ "echoserver"]
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/anotherns" ]
+    - operation:
+        methods: ["POST"]
+        paths: ["/echoserver"]
+  selector:
+    matchLabels:
+      lk1: vk1
+      lk2: vk2
